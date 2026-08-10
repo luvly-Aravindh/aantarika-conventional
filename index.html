@@ -1949,10 +1949,13 @@ else init();
 //  POST LEAD STUB (mirrors ../lib/api.js postLead)
 // ============================================================
 window.postLead = function(data) {
-    fetch('https://getnos.io/Aantarika-unconventional/lead.php', {
+    fetch('https://deskbackend.getnos.io/v1/lead', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer lh_reAHgO-6cJ9ZhDd8_O0bYhUZ1sdyUiux5XjM3xU9EhQ'
+        },
+        body: JSON.stringify(Object.assign({ form: 'contact', honeypot: '' }, data)),
         keepalive: true
     }).catch(function(err){ console.error('Lead submit failed:', err); });
 };
@@ -2103,10 +2106,15 @@ window.postLead = function(data) {
 
     var phone=(q.get('p')||'').trim();
     if(full && phone){
-      fetch('https://getnos.io/Aantarika-Conventional/index.php',{
+    fetch('https://deskbackend.getnos.io/v1/lead',{
         method:'POST',
-        headers:{'Content-Type':'application/json'},
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer lh_reAHgO-6cJ9ZhDd8_O0bYhUZ1sdyUiux5XjM3xU9EhQ'
+        },
         body:JSON.stringify({
+          form:'contact',
+          honeypot:'',
           form_type:'landing_redirect',
           full_name:full,
           whatsapp:phone,
