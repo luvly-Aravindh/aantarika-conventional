@@ -1389,17 +1389,17 @@ src="https://www.facebook.com/tr?id=1805951910390992&ev=PageView&noscript=1"
             <h1 class="q">Let us set up your free <em>design consultation</em></h1>
             <p class="qsub">A design consultant gives you a clear direction and an honest, itemised estimate. Free, with no obligation. First, how can we reach you.</p>
             <div class="field">
-                <label for="fName">Your full name</label>
+                <label for="fName">Name</label>
                 <input id="fName" type="text" placeholder="e.g. Karthik Venkatesan" autocomplete="name" />
                 <div class="err" id="errName">Please enter your name.</div>
             </div>
             <div class="field">
-                <label for="fEmail">Email address</label>
+                <label for="fEmail">Email</label>
                 <input id="fEmail" type="email" placeholder="you@email.com" autocomplete="email" />
                 <div class="err" id="errEmail">Please enter a valid email.</div>
             </div>
             <div class="field">
-                <label for="fPhone">WhatsApp number</label>
+                <label for="fPhone">Phone Number</label>
                 <div class="phonewrap">
                     <span class="cc">+91</span>
                     <input id="fPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="10 digit number" autocomplete="tel" />
@@ -1764,12 +1764,12 @@ function sendLead(qualified, onDone) {
         return;
     }
     leadSent = true;
-    // Same fields + order as index.html so Desk emails stay consistent
+    // Name / Email / Phone Number first — Desk maps these keys to those labels
     const payload = {
         subject: 'New Lead Aantarika - Google Ad',
-        full_name: answers.name || '-',
+        name: answers.name || '-',
         email: answers.email || '-',
-        whatsapp: answers.phone ? '+91' + answers.phone : '-',
+        phone_number: answers.phone ? '+91' + answers.phone : '-',
         budget: answers.budget || '-',
         home_size: answers.size || '-',
         location: answers.location || '-',
@@ -1993,12 +1993,23 @@ const DESK_URL = 'https://deskbackend.getnos.io/v1/lead';
 const DESK_API_KEY = 'lh_leYiY4piJtrxOdj4mRgmrPBf6SNj10gBoh-Mdyx00GI';
 
 window.postLead = function(data, onDone) {
-    var body = Object.assign({
+    // Build body with Name / Email / Phone Number first so Desk lists them first
+    var body = {
         form: 'contact',
         honeypot: '',
-        subject: 'New Lead Aantarika - Google Ad'
-    }, data);
-    if (!body.subject) body.subject = 'New Lead Aantarika - Google Ad';
+        subject: (data && data.subject) || 'New Lead Aantarika - Google Ad',
+        name: (data && (data.name || data.full_name)) || '-',
+        email: (data && data.email) || '-',
+        phone_number: (data && (data.phone_number || data.whatsapp || data.phone)) || '-',
+        budget: (data && data.budget) || '-',
+        home_size: (data && data.home_size) || '-',
+        location: (data && data.location) || '-',
+        qualified: (data && data.qualified) || '-',
+        disqualified_reason: (data && data.disqualified_reason) || '-'
+    };
+    if (data && data.form_type) body.form_type = data.form_type;
+    if (data && data.source) body.source = data.source;
+    if (data && data.ts) body.ts = data.ts;
 
     fetch(DESK_URL, {
         method: 'POST',
@@ -2168,9 +2179,9 @@ window.postLead = function(data, onDone) {
     if(full && phone && typeof window.postLead === 'function'){
       window.postLead({
         subject:'New Lead Aantarika - Google Ad',
-        full_name:full,
+        name:full,
         email:'-',
-        whatsapp:phone,
+        phone_number:phone,
         budget:'-',
         home_size:'-',
         location:'-',
