@@ -1757,8 +1757,7 @@ function locNext() {
     if (!area) { errArea.classList.add('show'); return; }
     errArea.classList.remove('show');
     answers.location = area;
-    if (isQualified(answers)) goStep('meeting');
-    else goStep('disqualified');
+    goStep('meeting');
 }
 
 // ============================================================
@@ -1776,15 +1775,13 @@ function sendLead(qualified, onDone) {
     leadSent = true;
     // Name / Email / Phone Number first — Desk maps these keys to those labels
     const payload = {
-        subject: 'New Lead Aantarika - Google Ad',
+        subject: 'New Form lead - Aantarika',
         name: answers.name || '-',
         email: answers.email || '-',
         phone_number: answers.phone ? '+91' + answers.phone : '-',
         budget: answers.budget || '-',
         home_size: answers.size || '-',
         location: answers.location || '-',
-        qualified: qualified ? 'yes' : 'no',
-        disqualified_reason: qualified ? '-' : (dqReasonText(answers) || '-'),
     };
     if (typeof window.postLead === 'function') window.postLead(payload, onDone);
     else {
@@ -2007,15 +2004,13 @@ window.postLead = function(data, onDone) {
     var body = {
         form: 'contact',
         honeypot: '',
-        subject: (data && data.subject) || 'New Lead Aantarika - Google Ad',
+        subject: (data && data.subject) || 'New Form lead - Aantarika',
         name: (data && (data.name || data.full_name)) || '-',
         email: (data && data.email) || '-',
         phone_number: (data && (data.phone_number || data.whatsapp || data.phone)) || '-',
         budget: (data && data.budget) || '-',
         home_size: (data && data.home_size) || '-',
-        location: (data && data.location) || '-',
-        qualified: (data && data.qualified) || '-',
-        disqualified_reason: (data && data.disqualified_reason) || '-'
+        location: (data && data.location) || '-'
     };
     if (data && data.form_type) body.form_type = data.form_type;
     if (data && data.source) body.source = data.source;
@@ -2188,15 +2183,13 @@ window.postLead = function(data, onDone) {
     var phone=(q.get('p')||'').trim();
     if(full && phone && typeof window.postLead === 'function'){
       window.postLead({
-        subject:'New Lead Aantarika - Google Ad',
+        subject:'New Form lead - Aantarika',
         name:full,
         email:'-',
         phone_number:phone,
         budget:'-',
         home_size:'-',
         location:'-',
-        qualified:'-',
-        disqualified_reason:'-',
         form_type:'landing_redirect',
         source:'aantarika_bangalore_interior_trap',
         ts:new Date().toISOString()
