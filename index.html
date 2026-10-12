@@ -7,17 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WSRR2JGD27"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-WSRR2JGD27');
-</script>
-
 <style>
 :root{
   --ink:#1c1814; --espresso:#201b15; --paper:#f6f1e8; --paper2:#fbf8f1; --sand:#efe7d8; --white:#fff;
@@ -1592,7 +1581,7 @@ src="https://www.facebook.com/tr?id=1805951910390992&ev=PageView&noscript=1"
 
 <script>
 /* ============================================================
-   AuditFlow — converted 1:1 from AuditFlow.jsx (React) to
+   AuditFlow â€” converted 1:1 from AuditFlow.jsx (React) to
    vanilla HTML/CSS/JS. Logic, step order, TidyCal paths, and
    qualification rules match the source component exactly.
    ============================================================ */
@@ -1679,9 +1668,15 @@ function goStep(name, scroll) {
     }
 
     if (name === 'calendar') {
-        sendLead(true);
-        mountTidyCal();
         const isExp = answers.meeting === 'Experience centre visit';
+        if (!previewMode) {
+            // Virtual: send lead then thank-you page. Experience: send lead then TidyCal.
+            sendLead(true, function() {
+                if (!isExp) redirectToThankYouVirtual();
+            });
+            if (!isExp) return;
+        }
+        mountTidyCal();
         calTitle.textContent = isExp ? 'Pick a time to visit our experience centre' : 'Pick a time for your video consultation';
         calSub.textContent = isExp
             ? 'Your details are saved. Choose a slot to visit our J.P. Nagar studio. A consultant will confirm.'
@@ -1759,11 +1754,17 @@ function locNext() {
 // ============================================================
 //  SEND LEAD (mirrors postLead() call in AuditFlow.jsx)
 // ============================================================
-function sendLead(qualified) {
-    if (previewMode) return;
-    if (leadSent) return;
+function sendLead(qualified, onDone) {
+    if (previewMode) {
+        if (onDone) onDone();
+        return;
+    }
+    if (leadSent) {
+        if (onDone) onDone();
+        return;
+    }
     leadSent = true;
-    // Only the fields wanted in the lead email, in the order requested; blanks show as '-'
+    // Same fields + order as index.html so Desk emails stay consistent
     const payload = {
         subject: 'New Lead Aantarika - Google Ad',
         full_name: answers.name || '-',
@@ -1773,17 +1774,49 @@ function sendLead(qualified) {
         home_size: answers.size || '-',
         location: answers.location || '-',
         qualified: qualified ? 'yes' : 'no',
-        disqualified_reason: '-',
+        disqualified_reason: qualified ? '-' : (dqReasonText(answers) || '-'),
     };
-    if (typeof window.postLead === 'function') window.postLead(payload);
-    else console.log('📦 Lead payload:', payload);
+    if (typeof window.postLead === 'function') window.postLead(payload, onDone);
+    else {
+        console.log('Lead payload:', payload);
+        if (onDone) onDone();
+    }
+}
+
+function redirectToThankYouVirtual() {
+    if (previewMode) return;
+    if (answers.meeting === 'Experience centre visit') return;
+    const params = new URLSearchParams();
+    if (answers.name) params.set('name', answers.name);
+    const qs = params.toString();
+    window.location.href = 'thank-you-virtual.html' + (qs ? '?' + qs : '');
+}
+
+function setupTidyCalBookingRedirect() {
+    if (window.__tyRedirectBound) return;
+    window.__tyRedirectBound = true;
+    function attach() {
+        if (window.TidyCal && typeof window.TidyCal.on === 'function') {
+            window.TidyCal.on('booking_complete', function() {
+                redirectToThankYouVirtual();
+            });
+            return;
+        }
+        setTimeout(attach, 150);
+    }
+    attach();
+    window.addEventListener('message', function(e) {
+        if (e.origin !== 'https://tidycal.com') return;
+        const data = e.data;
+        if (data && data.event === 'booking_complete') redirectToThankYouVirtual();
+    });
 }
 
 // ============================================================
 //  TIDYCAL MOUNT (matches mountTidyCal() in AuditFlow.jsx)
 // ============================================================
 /* Dispose the current embed. We deliberately DO NOT remove the embed.js
-   <script> or the global window.TidyCal — the script is loaded once and
+   <script> or the global window.TidyCal â€” the script is loaded once and
    reused, so re-entry can re-initialise a fresh embed via TidyCal.init(). */
 function teardownTidyCal() {
     clearInterval(timerRef);
@@ -1809,7 +1842,7 @@ function mountTidyCal() {
     const path = answers.meeting === 'Experience centre visit' ? EXPERIENCE_PATH : VIRTUAL_PATH;
     if (!calMount) return;
 
-    /* Always start from a clean slate — a stale iframe that was hidden
+    /* Always start from a clean slate â€” a stale iframe that was hidden
        (display:none) mid-booking never recovers on its own. */
     clearInterval(timerRef);
     tcMounted = path;
@@ -1847,7 +1880,7 @@ function mountTidyCal() {
             };
             document.body.appendChild(s);
         } else {
-            /* Script tag exists but window.TidyCal not ready yet — wait for it. */
+            /* Script tag exists but window.TidyCal not ready yet â€” wait for it. */
             let waited = 0;
             const wt = setInterval(function() {
                 waited += 100;
@@ -1944,6 +1977,7 @@ function init() {
     }
 
     // default: start at contact
+    setupTidyCalBookingRedirect();
     goStep('contact', false);
 }
 
@@ -1953,18 +1987,37 @@ else init();
 })();
 
 // ============================================================
-//  POST LEAD STUB (mirrors ../lib/api.js postLead)
+//  getnos Desk lead API (same shape as index.html)
 // ============================================================
-window.postLead = function(data) {
-    fetch('https://deskbackend.getnos.io/v1/lead', {
+const DESK_URL = 'https://deskbackend.getnos.io/v1/lead';
+const DESK_API_KEY = 'lh_leYiY4piJtrxOdj4mRgmrPBf6SNj10gBoh-Mdyx00GI';
+
+window.postLead = function(data, onDone) {
+    var body = Object.assign({
+        form: 'contact',
+        honeypot: '',
+        subject: 'New Lead Aantarika - Google Ad'
+    }, data);
+    if (!body.subject) body.subject = 'New Lead Aantarika - Google Ad';
+
+    fetch(DESK_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer lh_reAHgO-6cJ9ZhDd8_O0bYhUZ1sdyUiux5XjM3xU9EhQ'
+            'Authorization': 'Bearer ' + DESK_API_KEY
         },
-        body: JSON.stringify(Object.assign({ form: 'contact', honeypot: '' }, data)),
+        body: JSON.stringify(body),
         keepalive: true
-    }).catch(function(err){ console.error('Lead submit failed:', err); });
+    })
+    .then(function(res) {
+        if (!res.ok) return res.text().then(function(t) { throw new Error(t || ('Desk API ' + res.status)); });
+        return res.json().catch(function() { return { ok: true }; });
+    })
+    .then(function() { if (onDone) onDone(); })
+    .catch(function(err) {
+        console.error('Lead submit failed:', err);
+        if (onDone) onDone();
+    });
 };
 </script>
 
@@ -2112,25 +2165,21 @@ window.postLead = function(data) {
     if(bar) bar.classList.add('show');
 
     var phone=(q.get('p')||'').trim();
-    if(full && phone){
-    fetch('https://deskbackend.getnos.io/v1/lead',{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization':'Bearer lh_reAHgO-6cJ9ZhDd8_O0bYhUZ1sdyUiux5XjM3xU9EhQ'
-        },
-        body:JSON.stringify({
-          form:'contact',
-          honeypot:'',
-          subject:'New Lead Aantarika - Google Ad',
-          full_name:full,
-          whatsapp:phone,
-          form_type:'landing_redirect',
-          source:'aantarika_bangalore_interior_trap',
-          ts:new Date().toISOString()
-        }),
-        keepalive:true
-      }).catch(function(){});
+    if(full && phone && typeof window.postLead === 'function'){
+      window.postLead({
+        subject:'New Lead Aantarika - Google Ad',
+        full_name:full,
+        email:'-',
+        whatsapp:phone,
+        budget:'-',
+        home_size:'-',
+        location:'-',
+        qualified:'-',
+        disqualified_reason:'-',
+        form_type:'landing_redirect',
+        source:'aantarika_bangalore_interior_trap',
+        ts:new Date().toISOString()
+      });
     }
   }
   if(first){
