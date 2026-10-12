@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your video consultation is confirmed | Aantarika</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1814;--paper:#f6f1e8;--paper2:#fbf8f1;--sand:#efe7d8;
+  --red:#e81b23;--red-lo:#a50f15;--red-hi:#ff5a52;
+  --gold:#e3aa4e;--muted:#6f655a;--line:#e3dbcb;
+  --serif:'Fraunces',Georgia,serif;--sans:'Jost',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);font-weight:300;color:var(--ink);background:var(--paper);line-height:1.68;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.1;letter-spacing:-.01em}
+em{font-style:italic;color:var(--red-lo)}
+a{color:inherit}
+.wrap{max-width:760px;margin:0 auto;padding:0 26px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:20px 0 12px;gap:12px;flex-wrap:wrap}
+.top img{height:34px}
+.badge{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--red-lo);background:rgba(232,27,35,.08);border:1px solid rgba(232,27,35,.18);padding:8px 14px;border-radius:40px}
+.hero{padding:28px 0 18px;text-align:center}
+.hero .check{width:58px;height:58px;border-radius:50%;margin:0 auto 18px;background:linear-gradient(180deg,#fff,#f8f2e8);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(28,24,20,.08)}
+.hero .check svg{width:28px;height:28px;stroke:var(--red);fill:none;stroke-width:2.4}
+.hero h1{font-size:clamp(30px,4vw,44px);color:var(--ink);max-width:14em;margin:0 auto}
+.hero p{margin:16px auto 0;max-width:38em;color:var(--muted);font-size:17px}
+.card{background:var(--paper2);border:1px solid var(--line);border-radius:18px;padding:28px 26px;margin:28px 0}
+.card h2{font-size:clamp(24px,3vw,30px);margin-bottom:8px}
+.card .sub{color:var(--muted);margin-bottom:22px}
+.steps{display:grid;gap:16px}
+.step{display:grid;grid-template-columns:42px 1fr;gap:14px;align-items:start;padding:16px 0;border-top:1px solid var(--line)}
+.step:first-child{border-top:0;padding-top:0}
+.step .no{width:42px;height:42px;border-radius:12px;background:var(--sand);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ink)}
+.step h3{font-size:18px;margin-bottom:4px}
+.step p{color:var(--muted);font-size:15px}
+.note{margin-top:22px;padding:16px 18px;border-radius:14px;background:var(--sand);color:#4d463d;font-size:14.5px}
+.stats{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 18px;margin:24px 0 8px;font-size:14px;color:var(--muted)}
+.stats b{color:var(--ink);font-weight:700}
+.ig{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:26px auto 0;padding:14px 22px;border-radius:11px;border:2px solid var(--ink);text-decoration:none;font-weight:600;font-size:15px;background:#fff}
+.ig:hover{background:var(--sand)}
+footer{text-align:center;padding:34px 0 48px;color:var(--muted);font-size:13px}
+footer .nm{font-family:var(--serif);font-size:18px;color:var(--ink);margin-bottom:6px}
+@media(max-width:600px){.card{padding:22px 18px}.top img{height:28px}}
+</style>
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1805951910390992');
+fbq('track','PageView');
+var uniqueLeadID='lead_'+Date.now()+'_'+Math.random().toString(36).substring(2,10);
+window.uniqueLeadID=uniqueLeadID;
+fbq('track','Lead',{},{eventID:uniqueLeadID});
+</script>
+</head>
+<body>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1805951910390992&ev=PageView&noscript=1" alt=""></noscript>
+
+<div class="wrap">
+  <header class="top">
+    <img src="https://getnos.io/Aantarika-unconventional/images/logo-aantarika.png" alt="Aantarika Interiors">
+    <span class="badge">Video call booked</span>
+  </header>
+
+  <section class="hero">
+    <div class="check" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg>
+    </div>
+    <h1 id="headline">Your online consultation is <em>confirmed.</em></h1>
+    <p>Thank you. Your free video consultation with Aantarika is locked in. You will join from wherever you are, and a design consultant will walk you through your home, your options, and an honest estimate.</p>
+  </section>
+
+  <section class="card">
+    <h2>What happens next</h2>
+    <p class="sub">Three simple steps, no obligation at any point.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="no">1</div>
+        <div>
+          <h3>Your link arrives on WhatsApp and email</h3>
+          <p>You will get the booking confirmation and the video call link on the number you shared. Keep an eye out so you do not miss it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="no">2</div>
+        <div>
+          <h3>Join the call from home</h3>
+          <p>Have your floor plan or a few photos of your space handy if you can. The call runs about 30 to 45 minutes.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="no">3</div>
+        <div>
+          <h3>Your free consultation</h3>
+          <p>You walk away with a clear design direction and an honest, itemised estimate. No surprises later, and no obligation to proceed.</p>
+        </div>
+      </div>
+    </div>
+    <div class="note"><strong>Free, with no obligation.</strong> Transparent pricing set in writing, honest timelines, and up to a 10-year warranty on selected interior components. More than 800 Bengaluru homes delivered since 2016.</div>
+  </section>
+
+  <div class="stats">
+    <span><b>800+</b> homes</span>
+    <span><b>10 yr</b> warranty</span>
+    <span><b>100%</b> in-house</span>
+    <span>Since <b>2016</b></span>
+  </div>
+
+  <div style="text-align:center">
+    <a class="ig" href="https://www.instagram.com/aantarika_design/" target="_blank" rel="noopener">See homes on Instagram</a>
+  </div>
+</div>
+
+<footer>
+  <p class="nm">Aantarika</p>
+  <p>&copy; 2026 Aantarika. All rights reserved.</p>
+</footer>
+
+<script>
+(function(){
+  var q=new URLSearchParams(location.search);
+  var name=(q.get('name')||'').trim();
+  if(name){
+    var h=document.getElementById('headline');
+    if(h) h.innerHTML=name.split(' ')[0]+', your online consultation is <em>confirmed.</em>';
+  }
+})();
+</script>
+</body>
+</html>
