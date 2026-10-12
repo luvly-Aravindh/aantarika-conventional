@@ -1752,23 +1752,17 @@ function sendLead(qualified) {
     if (previewMode) return;
     if (leadSent) return;
     leadSent = true;
-    // Order here is the order fields appear in the lead email; blanks show as '-'
+    // Only the fields wanted in the lead email, in the order requested; blanks show as '-'
     const payload = {
         subject: 'New Lead Aantarika - Google Ad',
         full_name: answers.name || '-',
         email: answers.email || '-',
         whatsapp: answers.phone ? '+91' + answers.phone : '-',
-        scope: answers.scope || '-',
-        home_size: answers.size || '-',
-        timeline: answers.timeline || '-',
         budget: answers.budget || '-',
+        home_size: answers.size || '-',
         location: answers.location || '-',
-        meeting_type: answers.meeting || '-',
         qualified: qualified ? 'yes' : 'no',
         disqualified_reason: '-',
-        form_type: 'aantarika_audit_flow',
-        source: 'aantarika_editorial_audit',
-        ts: new Date().toISOString(),
     };
     if (typeof window.postLead === 'function') window.postLead(payload);
     else console.log('📦 Lead payload:', payload);
