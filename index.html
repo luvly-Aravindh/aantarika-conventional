@@ -1765,7 +1765,7 @@ function sendLead(qualified) {
         location: answers.location || '-',
         meeting_type: answers.meeting || '-',
         qualified: qualified ? 'yes' : 'no',
-        disqualified_reason: qualified ? '-' : dqReasonText(answers),
+        disqualified_reason: '-',
         form_type: 'aantarika_audit_flow',
         source: 'aantarika_editorial_audit',
         ts: new Date().toISOString(),
