@@ -1752,19 +1752,21 @@ function sendLead(qualified) {
     if (previewMode) return;
     if (leadSent) return;
     leadSent = true;
+    // Order here is the order fields appear in the lead email; blanks show as '-'
     const payload = {
-        form_type: 'aantarika_audit_flow',
-        full_name: answers.name || '',
-        email: answers.email || '',
-        whatsapp: '+91' + (answers.phone || ''),
-        scope: answers.scope || '',
-        home_size: answers.size || '',
-        timeline: answers.timeline || '',
-        budget: answers.budget || '',
-        location: answers.location || '',
-        meeting_type: answers.meeting || '',
+        subject: 'New Lead Aantarika - Google Ad',
+        full_name: answers.name || '-',
+        email: answers.email || '-',
+        whatsapp: answers.phone ? '+91' + answers.phone : '-',
+        scope: answers.scope || '-',
+        home_size: answers.size || '-',
+        timeline: answers.timeline || '-',
+        budget: answers.budget || '-',
+        location: answers.location || '-',
+        meeting_type: answers.meeting || '-',
         qualified: qualified ? 'yes' : 'no',
-        disqualified_reason: qualified ? '' : dqReasonText(answers),
+        disqualified_reason: qualified ? '-' : dqReasonText(answers),
+        form_type: 'aantarika_audit_flow',
         source: 'aantarika_editorial_audit',
         ts: new Date().toISOString(),
     };
@@ -2115,9 +2117,10 @@ window.postLead = function(data) {
         body:JSON.stringify({
           form:'contact',
           honeypot:'',
-          form_type:'landing_redirect',
+          subject:'New Lead Aantarika - Google Ad',
           full_name:full,
           whatsapp:phone,
+          form_type:'landing_redirect',
           source:'aantarika_bangalore_interior_trap',
           ts:new Date().toISOString()
         }),
